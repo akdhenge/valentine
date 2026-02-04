@@ -130,7 +130,7 @@
       font-size:13px; opacity:.65; pointer-events:none;
     }
 
-    /* Modals */
+    /* Modals (base) */
     .modal{
       position:fixed; inset:0;
       display:none; place-items:center;
@@ -249,3 +249,501 @@
       border-radius:18px;
       box-shadow:0 14px 40px rgba(0,0,0,.22);
       display:block;
+      margin:10px auto 12px;
+    }
+    .countdown{
+      font-weight:800;
+      background:rgba(0,0,0,.06);
+      padding:10px 12px;
+      border-radius:14px;
+      display:inline-block;
+    }
+
+    /* Powered-up state styles */
+    .powered #yesBtn{
+      transition: transform .35s ease, left .35s ease, top .35s ease, box-shadow .35s ease;
+      box-shadow:0 18px 50px rgba(255,45,85,.35);
+    }
+
+    /* "Agreement" modal (Option 1: modal summary) */
+    .termsCard{
+      text-align:left;
+      padding:20px;
+    }
+    .termsTop{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom:10px;
+    }
+    .termsTitle{
+      margin:0;
+      font-size:clamp(18px,3.2vw,26px);
+      font-weight:900;
+      letter-spacing:-.02em;
+    }
+    .termsSmall{
+      margin:2px 0 0;
+      opacity:.78;
+      font-size:13px;
+    }
+    .termsBox{
+      background:rgba(0,0,0,.04);
+      border:1px solid rgba(0,0,0,.08);
+      border-radius:16px;
+      padding:14px;
+      max-height:240px;
+      overflow:auto;
+      line-height:1.35;
+    }
+    .termsBox ul{
+      margin:10px 0 0;
+      padding-left:18px;
+    }
+    .termsBox li{ margin:8px 0; }
+    .checkRow{
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+      margin-top:12px;
+      background:rgba(255,77,141,.10);
+      border:1px solid rgba(255,77,141,.22);
+      border-radius:16px;
+      padding:12px;
+    }
+    .checkRow input{ margin-top:3px; transform:scale(1.1); }
+    .finePrint{
+      margin:8px 0 0;
+      font-size:12px;
+      opacity:.72;
+    }
+    .agreeBtn[disabled]{
+      opacity:.45;
+      cursor:not-allowed;
+      filter:none;
+    }
+    .confetti{
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      overflow:hidden;
+    }
+    .confetti span{
+      position:absolute;
+      top:-20px;
+      font-size:18px;
+      animation: confettiFall linear forwards;
+      opacity:.95;
+    }
+    @keyframes confettiFall{
+      0%{transform:translateY(-30px) rotate(0deg); opacity:0}
+      15%{opacity:1}
+      100%{transform:translateY(520px) rotate(var(--spin)); opacity:0}
+    }
+  </style>
+</head>
+
+<body>
+  <div class="hearts" id="hearts"></div>
+
+  <div class="wrap">
+    <div class="card" id="cardRoot">
+      <div style="font-size:42px; user-select:none; margin-bottom:6px;">💘</div>
+      <h1>Will you be my Valentine?</h1>
+      <p class="sub">
+        This is a very serious, very scientific compatibility test.
+        Please choose wisely. (The universe is watching.)
+      </p>
+      <div class="badge" id="statusBadge">Status: awaiting your decision…</div>
+
+      <div class="playground" id="arena">
+        <button id="yesBtn" aria-label="Yes">YES 💖</button>
+        <button id="noBtn" aria-label="No">NO 🙃</button>
+        <button id="forgotBtn" aria-label="Alternative option">Forgot password? (I don’t deserve you)</button>
+        <div class="hint" id="hintText">Tip: the “YES” button is shy. Like… <i>criminally</i> shy.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NO modal -->
+  <div class="modal" id="modalNo">
+    <div class="modalCard">
+      <div style="font-size:40px">🚨</div>
+      <h2>HOW DARE YOU</h2>
+      <img class="catMeme"
+        src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExMG11ZzI1dDA3dXNoYjV2YTBwMHZsa20zOWk4bHpxM3NpaHJnd3p3byZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/BBNYBoYa5VwtO/giphy.gif"
+        alt="Shocked cat gif" />
+      <p style="margin:0; opacity:.92;">Excuse me?? In this economy?? On this day??</p>
+      <p style="margin:6px 0 0; opacity:.82;">Your “NO” has been forwarded to the Department of Romance.</p>
+      <div class="actions">
+        <button class="softBtn" id="closeNo">Ok ok 🙈</button>
+        <button class="primaryBtn" id="retryNo">I reconsider 💘</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- "I don’t deserve you" modal with chocolate power-up -->
+  <div class="modal" id="modalForgot">
+    <div class="modalCard">
+      <div style="font-size:40px">🥺</div>
+      <h2>Wow. That’s… accurate.</h2>
+      <p style="margin:0; opacity:.9;">
+        You selected: <b>“I don’t deserve you.”</b>
+      </p>
+      <p style="margin:8px 0 0; opacity:.85;">
+        Correct. But I’m trying my best. Please accept this shiny chocolate power-up:
+      </p>
+
+      <div class="coupon">
+        <span>🎟️</span>
+        <span>COUPON: <b>SHINY_CHOCOLATE</b></span>
+        <span>🍫</span>
+      </div>
+
+      <div class="chocoWrap">
+        <button class="chocoBtn" id="chocoBtn" aria-label="Take chocolate power-up">
+          <span>Take the shiny chocolate</span>
+        </button>
+        <div class="sparkle">Warning: may cause extreme confidence and sudden YES-clicking ability ✨</div>
+      </div>
+
+      <div class="actions">
+        <button class="softBtn" id="closeForgot">Close (I’m blushing) 🙈</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Transformation overlay -->
+  <div class="powerOverlay" id="powerOverlay" aria-hidden="true">
+    <div class="powerCard">
+      <div class="aura"></div>
+      <div class="powerTitle">🍫 POWER-UP ACTIVATED</div>
+      <p class="powerSub">Sugar rush + confidence upgrade detected. Reality is adjusting…</p>
+      <img class="powerGif"
+        src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExMG11ZzI1dDA3dXNoYjV2YTBwMHZsa20zOWk4bHpxM3NpaHJnd3p3byZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/BBNYBoYa5VwtO/giphy.gif"
+        alt="Power up gif" />
+      <div class="countdown" id="powerCountdown">Rewriting the universe in: 3…</div>
+    </div>
+  </div>
+
+  <!-- Agreement / Summary modal (Option 1) -->
+  <div class="modal" id="modalTerms">
+    <div class="modalCard termsCard">
+      <div class="confetti" id="confetti"></div>
+
+      <div class="termsTop">
+        <div>
+          <h2 class="termsTitle">Almost done! Quick Valentine Setup 😇</h2>
+          <p class="termsSmall">Just a few tiny, totally normal, definitely-not-suspicious agreements.</p>
+        </div>
+        <div style="font-size:34px; user-select:none;">📝💘</div>
+      </div>
+
+      <div class="termsBox">
+        <p style="margin:0 0 8px;"><b>Valentine Agreement v1.0</b> (highly official)</p>
+        <ul>
+          <li>🎮 I am allowed <b>2 hours of video games</b> per day (non-transferable, but renewable).</li>
+          <li>🍽️ Dishwasher complaints are now <b>deprecated</b>. Any related tickets are auto-closed.</li>
+          <li>🍕 Pizza counts as a vegetable on weekends. (Science has spoken.)</li>
+          <li>🛌 Naps are a basic human right. Interruptions require written approval in triplicate.</li>
+          <li>☕ I get one “coffee first, questions later” card each morning.</li>
+          <li>💖 Unlimited hugs are mandatory. (Yes, this clause is enforceable.)</li>
+          <li>🧠 If I say “one more game”, it means <b>exactly</b> one more game. (No further investigation.)</li>
+          <li>📺 If we watch a show together, skipping intros requires unanimous consent.</li>
+          <li>🧺 I will do laundry… eventually. (Timeline to be determined by vibes.)</li>
+        </ul>
+        <p style="margin:10px 0 0; opacity:.8;">
+          By agreeing, you confirm you are: adorable, powerful, and dangerously charming.
+        </p>
+      </div>
+
+      <div class="checkRow">
+        <input type="checkbox" id="termsCheck" />
+        <div>
+          <div style="font-weight:800;">I have totally read all of this and I definitely agree.</div>
+          <div style="font-size:12px; opacity:.75;">(It’s okay, nobody reads terms. That’s how they get you.)</div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="softBtn" id="termsBack">Wait, what? Go back</button>
+        <button class="primaryBtn agreeBtn" id="termsAgree" disabled>Agree & Continue ✅</button>
+      </div>
+
+      <div class="finePrint">
+        Fine print: This is a joke. Real agreement includes love, respect, teamwork, and snacks.
+      </div>
+    </div>
+  </div>
+
+  <!-- Final modal -->
+  <div class="modal" id="modalFinal">
+    <div class="modalCard">
+      <div style="font-size:42px">🎉💘</div>
+      <h2>Congratulations!</h2>
+      <p style="margin:8px 0 0; opacity:.88;">
+        You are officially my Valentine. Also, you just signed <b>Valentine Agreement v1.0</b>.
+      </p>
+      <p style="margin:10px 0 0; opacity:.8;">
+        (Don’t worry. The only enforceable clause is: <b>unlimited hugs</b>.)
+      </p>
+      <div class="actions">
+        <button class="primaryBtn" id="finalClose">Okay fine ❤️</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+  // Floating emojis background
+  const heartsEl = document.getElementById('hearts');
+  const heartChars = ["💖","💘","💕","💗","💓","💝","❤️","💞","✨","🥰"];
+  function makeHeart(){
+    const s = document.createElement('div');
+    s.className='heart';
+    s.textContent = heartChars[Math.floor(Math.random()*heartChars.length)];
+    const left = Math.random()*100;
+    const dur = 6 + Math.random()*6;
+    const drift = (Math.random()*140-70).toFixed(0)+'px';
+    const rot = (Math.random()*220-110).toFixed(0)+'deg';
+    const size = 16 + Math.random()*20;
+    s.style.left = left+'vw';
+    s.style.animationDuration = dur+'s';
+    s.style.setProperty('--drift', drift);
+    s.style.setProperty('--rot', rot);
+    s.style.fontSize = size+'px';
+    heartsEl.appendChild(s);
+    setTimeout(()=>s.remove(), dur*1000);
+  }
+  for(let i=0;i<18;i++) setTimeout(makeHeart, i*200);
+  setInterval(makeHeart, 420);
+
+  // Elements
+  const arena = document.getElementById('arena');
+  const yesBtn = document.getElementById('yesBtn');
+  const noBtn = document.getElementById('noBtn');
+  const forgotBtn = document.getElementById('forgotBtn');
+  const badge = document.getElementById('statusBadge');
+  const hintText = document.getElementById('hintText');
+  const cardRoot = document.getElementById('cardRoot');
+
+  const modalNo = document.getElementById('modalNo');
+  const closeNo = document.getElementById('closeNo');
+  const retryNo = document.getElementById('retryNo');
+
+  const modalForgot = document.getElementById('modalForgot');
+  const closeForgot = document.getElementById('closeForgot');
+  const chocoBtn = document.getElementById('chocoBtn');
+
+  const powerOverlay = document.getElementById('powerOverlay');
+  const powerCountdown = document.getElementById('powerCountdown');
+
+  const modalTerms = document.getElementById('modalTerms');
+  const termsCheck = document.getElementById('termsCheck');
+  const termsAgree = document.getElementById('termsAgree');
+  const termsBack = document.getElementById('termsBack');
+
+  const modalFinal = document.getElementById('modalFinal');
+  const finalClose = document.getElementById('finalClose');
+
+  const confetti = document.getElementById('confetti');
+
+  // State
+  let poweredUp = false;
+
+  // NO grows when YES escapes (only before power-up)
+  let noScale = 1;
+  const NO_SCALE_STEP = 0.08;
+  const NO_SCALE_MAX  = 1.9;
+
+  function placeYesRandomly(){
+    const a = arena.getBoundingClientRect();
+    const b = yesBtn.getBoundingClientRect();
+    const margin = 12;
+
+    const maxX = Math.max(margin, a.width - b.width - margin);
+    const maxY = Math.max(margin, a.height - b.height - margin);
+
+    // keep YES away from the bottom hint + forgot link area
+    const bottomReserve = 68;
+
+    const x = margin + Math.random() * (maxX - margin);
+    const y = margin + Math.random() * (Math.max(margin, maxY - bottomReserve) - margin);
+
+    yesBtn.style.left = x + 'px';
+    yesBtn.style.top  = y + 'px';
+  }
+
+  function encourageNo(){
+    if (poweredUp) return;
+    if (noScale < NO_SCALE_MAX){
+      noScale = Math.min(noScale + NO_SCALE_STEP, NO_SCALE_MAX);
+      noBtn.style.transform = `scale(${noScale})`;
+    }
+    if (noScale > 1.2) noBtn.textContent = "NO 😏";
+    if (noScale > 1.5) noBtn.textContent = "NO (just saying)";
+    if (noScale > 1.75) noBtn.textContent = "NO (it’s huge now)";
+  }
+
+  function yesEscapes(){
+    if (poweredUp) return; // once powered up, YES stops running
+    placeYesRandomly();
+    encourageNo();
+    badge.textContent = "Status: YES button is currently in flight 🏃‍♀️💨 (NO is gaining confidence…)";
+  }
+
+  function fleeFromPointer(clientX, clientY){
+    if (poweredUp) return;
+
+    const a = arena.getBoundingClientRect();
+    const b = yesBtn.getBoundingClientRect();
+
+    const px = clientX - a.left;
+    const py = clientX - a.left ? (clientY - a.top) : (clientY - a.top);
+
+    const bx = (b.left - a.left) + b.width / 2;
+    const by = (b.top  - a.top)  + b.height / 2;
+
+    const dist = Math.hypot(px - bx, py - by);
+    if (dist < 120) yesEscapes();
+  }
+
+  // Mouse + touch
+  arena.addEventListener('mousemove', (e)=>fleeFromPointer(e.clientX, e.clientY), {passive:true});
+  arena.addEventListener('touchstart', (e)=>{ const t=e.touches[0]; if(t) fleeFromPointer(t.clientX, t.clientY); }, {passive:true});
+  arena.addEventListener('touchmove', (e)=>{ const t=e.touches[0]; if(t) fleeFromPointer(t.clientX, t.clientY); }, {passive:true});
+
+  yesBtn.addEventListener('mouseenter', ()=>yesEscapes());
+
+  noBtn.addEventListener('click', ()=>{
+    badge.textContent = "Status: NO was pressed (this will be investigated) 🕵️‍♂️";
+    modalNo.classList.add('show');
+  });
+
+  forgotBtn.addEventListener('click', ()=>{
+    badge.textContent = "Status: self-roast accepted. Reward incoming… 🍫";
+    modalForgot.classList.add('show');
+  });
+
+  closeNo.addEventListener('click', ()=>modalNo.classList.remove('show'));
+  retryNo.addEventListener('click', ()=>{
+    modalNo.classList.remove('show');
+    badge.textContent = "Status: wise choice. Try again 😌💘";
+    yesEscapes();
+  });
+
+  closeForgot.addEventListener('click', ()=>modalForgot.classList.remove('show'));
+
+  // Power-up flow
+  function startPowerUp(){
+    modalForgot.classList.remove('show');
+    powerOverlay.classList.add('show');
+
+    let t = 3;
+    powerCountdown.textContent = `Rewriting the universe in: ${t}…`;
+    const timer = setInterval(()=>{
+      t--;
+      if (t > 0){
+        powerCountdown.textContent = `Rewriting the universe in: ${t}…`;
+      } else {
+        clearInterval(timer);
+        powerCountdown.textContent = "Universe updated. YES is now catchable. ✅";
+        setTimeout(()=>{
+          powerOverlay.classList.remove('show');
+          applyPoweredUpState();
+        }, 650);
+      }
+    }, 700);
+  }
+
+  function applyPoweredUpState(){
+    poweredUp = true;
+    cardRoot.classList.add('powered');
+
+    // Make NO tiny + move it away
+    noBtn.style.transform = "scale(0.75)";
+    noBtn.style.left = "10%";
+    noBtn.style.top  = "75%";
+    noBtn.textContent = "NO (weak)";
+
+    // Make YES big, centered, and stop moving
+    yesBtn.style.left = "50%";
+    yesBtn.style.top  = "44%";
+    yesBtn.style.transform = "translate(-50%, -50%) scale(1.35)";
+    yesBtn.style.boxShadow = "0 18px 50px rgba(255,45,85,.35)";
+    yesBtn.textContent = "YES (click me 😌💖)";
+
+    hintText.textContent = "You are now powered up. The YES button can no longer run away. 😈🍫";
+    badge.textContent = "Status: SHINY_CHOCOLATE applied. YES unlocked. ✅";
+  }
+
+  chocoBtn.addEventListener('click', startPowerUp);
+
+  // Agreement modal logic
+  function openTerms(){
+    // reset checkbox/button each time
+    termsCheck.checked = false;
+    termsAgree.disabled = true;
+    modalTerms.classList.add('show');
+    spawnConfetti();
+  }
+
+  termsCheck.addEventListener('change', ()=>{
+    termsAgree.disabled = !termsCheck.checked;
+  });
+
+  termsBack.addEventListener('click', ()=>{
+    modalTerms.classList.remove('show');
+    badge.textContent = "Status: Agreement postponed. Valentine still pending. 😇";
+  });
+
+  termsAgree.addEventListener('click', ()=>{
+    modalTerms.classList.remove('show');
+    modalFinal.classList.add('show');
+    badge.textContent = "Status: Agreement signed. Valentine protocol complete. 💘";
+  });
+
+  finalClose.addEventListener('click', ()=>{
+    modalFinal.classList.remove('show');
+  });
+
+  function spawnConfetti(){
+    confetti.innerHTML = "";
+    const bits = ["💖","✨","💘","🎉","💞","🍫"];
+    const count = 24;
+    for (let i=0; i<count; i++){
+      const s = document.createElement("span");
+      s.textContent = bits[Math.floor(Math.random()*bits.length)];
+      const left = Math.random()*100;
+      const dur = 1.8 + Math.random()*1.4;
+      const spin = (Math.random()*360 - 180).toFixed(0) + "deg";
+      s.style.left = left + "%";
+      s.style.animationDuration = dur + "s";
+      s.style.setProperty("--spin", spin);
+      s.style.fontSize = (14 + Math.random()*14).toFixed(0) + "px";
+      s.style.opacity = (0.7 + Math.random()*0.3).toFixed(2);
+      confetti.appendChild(s);
+      setTimeout(()=>s.remove(), dur*1000);
+    }
+  }
+
+  // YES click behavior:
+  // - before power-up: possible ninja win -> show Terms anyway (funny)
+  // - after power-up: show Terms modal as "final setup"
+  yesBtn.addEventListener('click', ()=>{
+    openTerms();
+  });
+
+  // Initial placement (without growing NO)
+  placeYesRandomly();
+
+  // Secret override key
+  window.addEventListener('keydown', (e)=>{
+    if (e.key.toLowerCase() === 'y') {
+      applyPoweredUpState();
+      alert("Secret override: SHINY_CHOCOLATE applied 🍫✨");
+    }
+  });
+</script>
+</body>
+</html>
