@@ -149,6 +149,11 @@
       top: 54%;
       background: #111;
       color: #fff;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    #noBtn:hover {
+      box-shadow: 0 0 0 6px rgba(0,0,0,0.08);
     }
 
     .badge {
@@ -237,12 +242,6 @@
       background: linear-gradient(135deg, #ff4d8d, #ff2d55);
       color: #fff;
     }
-
-    /* Small screens */
-    @media (max-width: 420px) {
-      .playground { height: 290px; }
-      #yesBtn, #noBtn { font-size: 17px; padding: 13px 20px; }
-    }
   </style>
 </head>
 <body>
@@ -321,6 +320,28 @@
     const closeBtn = document.getElementById('closeBtn');
     const reconsiderBtn = document.getElementById('reconsiderBtn');
 
+    // NO button growth mechanics 😈
+    let yesEscapeCount = 0;
+    let noScale = 1;
+    const NO_SCALE_STEP = 0.08; // growth per YES escape
+    const NO_SCALE_MAX = 1.8;   // cap so layout doesn't implode
+
+    function encourageNo() {
+      yesEscapeCount++;
+
+      if (noScale < NO_SCALE_MAX) {
+        noScale += NO_SCALE_STEP;
+        noScale = Math.min(noScale, NO_SCALE_MAX);
+        noBtn.style.transform = `scale(${noScale})`;
+      }
+
+      // Escalating button text for extra comedy
+      if (yesEscapeCount === 3) noBtn.textContent = "NO 🙂";
+      else if (yesEscapeCount === 6) noBtn.textContent = "NO 😏";
+      else if (yesEscapeCount === 10) noBtn.textContent = "NO (just saying)";
+      else if (yesEscapeCount === 14) noBtn.textContent = "NO (it's huge now)";
+    }
+
     // Place the YES button somewhere random inside the arena, but not outside.
     function moveYesButton(escapeBoost = 1) {
       const a = arena.getBoundingClientRect();
@@ -331,7 +352,7 @@
       const maxX = a.width - b.width - margin;
       const maxY = a.height - b.height - margin;
 
-      // Random position, slightly biased away from center for extra chaos
+      // Random position
       const rand = (max) => Math.max(margin, Math.min(max, Math.random() * max));
       const x = rand(maxX);
       const y = rand(maxY);
@@ -341,7 +362,13 @@
 
       // A little wobble so it feels alive
       const wobble = 3 * escapeBoost;
-      yesBtn.style.transform = `translate(${(Math.random()*wobble - wobble/2).toFixed(1)}px, ${(Math.random()*wobble - wobble/2).toFixed(1)}px) rotate(${(Math.random()*6-3).toFixed(1)}deg)`;
+      yesBtn.style.transform =
+        `translate(${(Math.random()*wobble - wobble/2).toFixed(1)}px,
+                   ${(Math.random()*wobble - wobble/2).toFixed(1)}px)
+         rotate(${(Math.random()*6-3).toFixed(1)}deg)`;
+
+      // 👇 Every escape encourages NO
+      encourageNo();
     }
 
     // Detect proximity of pointer to the YES button and scoot it away.
@@ -364,11 +391,11 @@
       if (dist < panicRadius) {
         const escapeBoost = Math.max(1, (panicRadius - dist) / 25);
         moveYesButton(escapeBoost);
-        badge.textContent = "Status: YES button is currently in flight 🏃‍♀️💨";
+        badge.textContent = "Status: YES button is currently in flight 🏃‍♀️💨 (NO is gaining confidence…)";
       }
     }
 
-    // Initial placement (so it doesn't start dead-center every time)
+    // Initial placement
     moveYesButton(1);
 
     // Mouse + touch: make YES flee.
