@@ -30,7 +30,31 @@
         linear-gradient(135deg, var(--bg1), var(--bg2));
     }
 
+    /* Floating emojis layer (restored) */
+    .hearts {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.45;
+      filter: blur(0.15px);
+      z-index: 0;
+    }
+    .heart {
+      position: absolute;
+      transform: translateY(110vh);
+      animation: floaty linear infinite;
+      will-change: transform, opacity;
+      user-select: none;
+    }
+    @keyframes floaty {
+      0%   { transform: translateY(110vh) translateX(0) rotate(0deg); opacity: 0; }
+      10%  { opacity: 1; }
+      100% { transform: translateY(-20vh) translateX(var(--drift)) rotate(var(--rot)); opacity: 0; }
+    }
+
     .wrap {
+      position: relative;
+      z-index: 1; /* keep UI above hearts */
       min-height: 100vh;
       display: grid;
       place-items: center;
@@ -70,7 +94,7 @@
 
     .playground {
       position: relative;
-      height: 280px;
+      height: 290px;
       background: rgba(255,255,255,.6);
       border-radius: 18px;
       border: 1px dashed rgba(0,0,0,.15);
@@ -85,8 +109,11 @@
       font-size: 18px;
       font-weight: 700;
       box-shadow: 0 10px 22px rgba(0,0,0,.12);
-      transition: transform .2s ease;
+      transition: transform .2s ease, filter .15s ease;
+      -webkit-tap-highlight-color: transparent;
     }
+    button:hover { filter: brightness(1.02); }
+    button:active { transform: scale(0.98); }
 
     #yesBtn {
       position: absolute;
@@ -103,8 +130,10 @@
       background: #111;
       color: #fff;
       transition: transform .25s ease;
+      transform-origin: center;
     }
 
+    /* Tiny "forgot password" style */
     #forgotBtn {
       position: absolute;
       bottom: 14px;
@@ -112,9 +141,23 @@
       transform: translateX(-50%);
       background: transparent;
       box-shadow: none;
+      padding: 6px 10px;
       font-size: 12px;
       color: rgba(0,0,0,.55);
       text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    #forgotBtn:hover { color: rgba(0,0,0,.75); filter: none; }
+    #forgotBtn:active { transform: translateX(-50%) scale(0.98); }
+
+    .hint {
+      position: absolute;
+      left: 14px;
+      right: 14px;
+      bottom: 44px;
+      font-size: 13px;
+      opacity: 0.65;
+      pointer-events: none;
     }
 
     .modal {
@@ -124,15 +167,15 @@
       place-items: center;
       background: rgba(0,0,0,.55);
       z-index: 10;
+      padding: 18px;
     }
-
     .modal.show { display: grid; }
 
     .modalCard {
       background: #fff;
       border-radius: 22px;
       padding: 22px;
-      max-width: 520px;
+      max-width: 540px;
       width: 92vw;
       text-align: center;
       box-shadow: 0 20px 60px rgba(0,0,0,.25);
@@ -147,91 +190,216 @@
       box-shadow: 0 12px 30px rgba(0,0,0,.25);
     }
 
-    .modal button {
+    .modalActions button {
       margin: 8px;
       font-size: 15px;
+      box-shadow: none;
+    }
+    .softBtn {
+      background: #f2f2f2;
+    }
+    .primaryBtn {
+      background: linear-gradient(135deg, #ff4d8d, #ff2d55);
+      color: #fff;
     }
   </style>
 </head>
 
 <body>
-<div class="wrap">
-  <div class="card">
-    <h1>Will you be my Valentine? 💘</h1>
-    <p class="sub">This is a very serious decision. Please choose wisely.</p>
-    <div class="badge" id="status">Status: awaiting answer…</div>
+  <!-- Floating emojis (restored) -->
+  <div class="hearts" id="hearts"></div>
 
-    <div class="playground" id="arena">
-      <button id="yesBtn">YES 💖</button>
-      <button id="noBtn">NO 🙃</button>
-      <button id="forgotBtn">I don’t deserve you</button>
+  <div class="wrap">
+    <div class="card">
+      <h1>Will you be my Valentine? 💘</h1>
+      <p class="sub">This is a very serious decision. Please choose wisely.</p>
+      <div class="badge" id="status">Status: awaiting answer…</div>
+
+      <div class="playground" id="arena">
+        <button id="yesBtn" aria-label="Yes">YES 💖</button>
+        <button id="noBtn" aria-label="No">NO 🙃</button>
+        <button id="forgotBtn" aria-label="Alternative option">Forgot password? (I don’t deserve you)</button>
+        <div class="hint">Tip: the “YES” button is shy. Like… *criminally* shy.</div>
+      </div>
     </div>
   </div>
-</div>
 
-<!-- NO modal -->
-<div class="modal" id="noModal">
-  <div class="modalCard">
-    <h2>HOW DARE YOU</h2>
-    <img
-      class="catMeme"
-      src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExMG11ZzI1dDA3dXNoYjV2YTBwMHZsa20zOWk4bHpxM3NpaHJnd3p3byZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/BBNYBoYa5VwtO/giphy.gif"
-      alt="Shocked cat gif"
-    />
-    <p>Excuse me?? In this economy?? On this day??</p>
-    <button onclick="closeModals()">Ok ok 🙈</button>
+  <!-- NO modal -->
+  <div class="modal" id="noModal">
+    <div class="modalCard">
+      <h2>HOW DARE YOU</h2>
+      <img
+        class="catMeme"
+        src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExMG11ZzI1dDA3dXNoYjV2YTBwMHZsa20zOWk4bHpxM3NpaHJnd3p3byZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/BBNYBoYa5VwtO/giphy.gif"
+        alt="Shocked cat gif"
+      />
+      <p>Excuse me?? In this economy?? On this day??</p>
+      <div class="modalActions">
+        <button class="softBtn" id="closeNo">Ok ok 🙈</button>
+        <button class="primaryBtn" id="retryNo">I reconsider 💘</button>
+      </div>
+    </div>
   </div>
-</div>
 
-<!-- Self-roast modal -->
-<div class="modal" id="forgotModal">
-  <div class="modalCard">
-    <h2>Wow. That’s accurate.</h2>
-    <img
-      class="catMeme"
-      src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExMG11ZzI1dDA3dXNoYjV2YTBwMHZsa20zOWk4bHpxM3NpaHJnd3p3byZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/BBNYBoYa5VwtO/giphy.gif"
-      alt="Self roast gif"
-    />
-    <p>You selected: “I don’t deserve you.” Correct. But I’m trying.</p>
-    <button onclick="closeModals()">I reconsider 💘</button>
+  <!-- Self-roast modal -->
+  <div class="modal" id="forgotModal">
+    <div class="modalCard">
+      <h2>Wow. That’s accurate.</h2>
+      <img
+        class="catMeme"
+        src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExMG11ZzI1dDA3dXNoYjV2YTBwMHZsa20zOWk4bHpxM3NpaHJnd3p3byZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/BBNYBoYa5VwtO/giphy.gif"
+        alt="Self roast gif"
+      />
+      <p>You selected: “I don’t deserve you.” Correct. But I’m trying.</p>
+      <p><b>Coupon:</b> 1 free hug + 2 compliments + unlimited snacks 🍫</p>
+      <div class="modalActions">
+        <button class="softBtn" id="closeForgot">Close 🙈</button>
+        <button class="primaryBtn" id="retryForgot">Ok fine. Try again 💘</button>
+      </div>
+    </div>
   </div>
-</div>
 
 <script>
+  // === Floating emojis background (restored) ===
+  const heartsEl = document.getElementById('hearts');
+  const heartChars = ["💖","💘","💕","💗","💓","💝","❤️","💞","✨","🥰"];
+
+  function makeHeart() {
+    const s = document.createElement('div');
+    s.className = 'heart';
+    s.textContent = heartChars[Math.floor(Math.random() * heartChars.length)];
+
+    const left = Math.random() * 100;
+    const dur = 6 + Math.random() * 6;
+    const drift = (Math.random() * 140 - 70).toFixed(0) + 'px';
+    const rot = (Math.random() * 220 - 110).toFixed(0) + 'deg';
+    const size = 16 + Math.random() * 20;
+
+    s.style.left = left + 'vw';
+    s.style.animationDuration = dur + 's';
+    s.style.setProperty('--drift', drift);
+    s.style.setProperty('--rot', rot);
+    s.style.fontSize = size + 'px';
+
+    heartsEl.appendChild(s);
+    setTimeout(() => s.remove(), dur * 1000);
+  }
+
+  for (let i = 0; i < 18; i++) setTimeout(makeHeart, i * 200);
+  setInterval(makeHeart, 420);
+
+  // === Valentine trap logic ===
   const arena = document.getElementById("arena");
   const yesBtn = document.getElementById("yesBtn");
   const noBtn = document.getElementById("noBtn");
   const forgotBtn = document.getElementById("forgotBtn");
   const status = document.getElementById("status");
 
-  let noScale = 1;
+  const noModal = document.getElementById("noModal");
+  const forgotModal = document.getElementById("forgotModal");
+  const closeNo = document.getElementById("closeNo");
+  const retryNo = document.getElementById("retryNo");
+  const closeForgot = document.getElementById("closeForgot");
+  const retryForgot = document.getElementById("retryForgot");
 
-  function moveYes() {
+  let noScale = 1;
+  const NO_SCALE_STEP = 0.08;
+  const NO_SCALE_MAX = 1.9;
+
+  function placeYesRandomly() {
     const a = arena.getBoundingClientRect();
     const b = yesBtn.getBoundingClientRect();
-    yesBtn.style.left = Math.random() * (a.width - b.width) + "px";
-    yesBtn.style.top  = Math.random() * (a.height - b.height) + "px";
 
-    noScale = Math.min(noScale + 0.08, 1.9);
-    noBtn.style.transform = `scale(${noScale})`;
-    status.textContent = "YES escaped. NO is gaining confidence…";
+    const margin = 12;
+    const maxX = Math.max(margin, a.width - b.width - margin);
+    const maxY = Math.max(margin, a.height - b.height - margin);
+
+    const x = margin + Math.random() * (maxX - margin);
+    const y = margin + Math.random() * (maxY - margin - 40); // keep above hint / forgot btn
+
+    yesBtn.style.left = x + "px";
+    yesBtn.style.top  = y + "px";
   }
 
-  arena.addEventListener("mousemove", e => {
+  function yesEscapes() {
+    placeYesRandomly();
+
+    noScale = Math.min(noScale + NO_SCALE_STEP, NO_SCALE_MAX);
+    noBtn.style.transform = `scale(${noScale})`;
+
+    status.textContent = "YES escaped. NO is gaining confidence… 😈";
+
+    // optional escalating NO label
+    if (noScale > 1.2) noBtn.textContent = "NO 😏";
+    if (noScale > 1.5) noBtn.textContent = "NO (just saying)";
+    if (noScale > 1.75) noBtn.textContent = "NO (it’s huge now)";
+  }
+
+  function fleeFromPointer(clientX, clientY) {
+    const a = arena.getBoundingClientRect();
     const b = yesBtn.getBoundingClientRect();
-    if (Math.hypot(e.clientX - b.x, e.clientY - b.y) < 120) moveYes();
+
+    const px = clientX - a.left;
+    const py = clientY - a.top;
+
+    const bx = (b.left - a.left) + b.width / 2;
+    const by = (b.top  - a.top)  + b.height / 2;
+
+    const dist = Math.hypot(px - bx, py - by);
+
+    if (dist < 120) yesEscapes();
+  }
+
+  // Mouse + touch support
+  arena.addEventListener("mousemove", (e) => fleeFromPointer(e.clientX, e.clientY), { passive: true });
+  arena.addEventListener("touchstart", (e) => {
+    const t = e.touches[0];
+    if (t) fleeFromPointer(t.clientX, t.clientY);
+  }, { passive: true });
+  arena.addEventListener("touchmove", (e) => {
+    const t = e.touches[0];
+    if (t) fleeFromPointer(t.clientX, t.clientY);
+  }, { passive: true });
+
+  // If she somehow hovers it, nope.
+  yesBtn.addEventListener("mouseenter", () => yesEscapes());
+
+  // Click handlers
+  yesBtn.addEventListener("click", () => {
+    status.textContent = "YES was clicked. This is either true love… or witchcraft. 💍✨";
+    alert("YOU DID IT! 💖\n\nEither you're ridiculously fast or the universe shipped us.");
   });
 
-  yesBtn.onclick = () => alert("You caught YES. This is destiny 💍");
-  noBtn.onclick = () => document.getElementById("noModal").classList.add("show");
-  forgotBtn.onclick = () => document.getElementById("forgotModal").classList.add("show");
+  noBtn.addEventListener("click", () => {
+    status.textContent = "Status: NO was pressed (this will be investigated) 🕵️‍♂️";
+    noModal.classList.add("show");
+  });
+
+  forgotBtn.addEventListener("click", () => {
+    status.textContent = "Status: self-roast accepted. Confidence set to: low 🥲";
+    forgotModal.classList.add("show");
+  });
 
   function closeModals() {
-    document.querySelectorAll(".modal").forEach(m => m.classList.remove("show"));
+    noModal.classList.remove("show");
+    forgotModal.classList.remove("show");
   }
 
-  moveYes();
+  closeNo.addEventListener("click", closeModals);
+  closeForgot.addEventListener("click", closeModals);
+  retryNo.addEventListener("click", () => { closeModals(); yesEscapes(); });
+  retryForgot.addEventListener("click", () => { closeModals(); yesEscapes(); });
+
+  // Initial placement WITHOUT growing NO yet
+  placeYesRandomly();
+
+  // Secret override (if she gets mad)
+  window.addEventListener("keydown", (e) => {
+    if (e.key.toLowerCase() === "y") {
+      status.textContent = "Status: Secret override activated. The universe says YES. 💖";
+      alert("Secret override: YES accepted 💖");
+    }
+  });
 </script>
 </body>
 </html>
-
