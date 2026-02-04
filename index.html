@@ -1,26 +1,27 @@
-<!doctype html><!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Important Valentine Question</title>
+
   <style>
     :root {
       --bg1: #ffebf3;
       --bg2: #ffe6cc;
-      --card: rgba(255, 255, 255, 0.75);
+      --card: rgba(255,255,255,0.75);
       --text: #1f1f1f;
       --shadow: 0 18px 50px rgba(0,0,0,.12);
       --radius: 24px;
       --btn-radius: 999px;
-      --dark: #111;
     }
 
     * { box-sizing: border-box; }
+
     body {
       margin: 0;
       min-height: 100vh;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
       color: var(--text);
       overflow: hidden;
       background:
@@ -29,29 +30,7 @@
         linear-gradient(135deg, var(--bg1), var(--bg2));
     }
 
-    .hearts {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      opacity: 0.45;
-      filter: blur(0.2px);
-    }
-
-    .heart {
-      position: absolute;
-      font-size: 26px;
-      animation: floaty 8s linear infinite;
-      transform: translateY(110vh);
-    }
-
-    @keyframes floaty {
-      0%   { transform: translateY(110vh) translateX(0) rotate(0deg); opacity: 0; }
-      10%  { opacity: 1; }
-      100% { transform: translateY(-20vh) translateX(var(--drift)) rotate(var(--rot)); opacity: 0; }
-    }
-
     .wrap {
-      position: relative;
       min-height: 100vh;
       display: grid;
       place-items: center;
@@ -61,443 +40,197 @@
     .card {
       width: min(720px, 92vw);
       background: var(--card);
-      border: 1px solid rgba(255,255,255,.55);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
-      padding: 28px 22px 20px;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
+      padding: 26px;
       text-align: center;
-      position: relative;
+      backdrop-filter: blur(10px);
     }
 
     h1 {
-      margin: 0 0 8px;
+      margin: 0 0 10px;
       font-size: clamp(28px, 5vw, 44px);
-      letter-spacing: -0.02em;
     }
 
     .sub {
-      margin: 0 auto 18px;
-      max-width: 52ch;
-      font-size: clamp(14px, 2.5vw, 18px);
-      opacity: 0.9;
-      line-height: 1.4;
-    }
-
-    .emoji {
-      font-size: 42px;
-      margin-bottom: 10px;
-      user-select: none;
+      font-size: 16px;
+      opacity: .9;
+      margin-bottom: 14px;
     }
 
     .badge {
       display: inline-block;
-      margin-top: 10px;
       padding: 8px 12px;
-      border-radius: 999px;
-      background: rgba(255,59,122,.10);
-      border: 1px solid rgba(255,59,122,.22);
-      font-weight: 650;
       font-size: 13px;
+      border-radius: 999px;
+      background: rgba(255,59,122,.12);
+      margin-bottom: 12px;
+      font-weight: 600;
     }
 
     .playground {
       position: relative;
       height: 280px;
-      margin-top: 18px;
+      background: rgba(255,255,255,.6);
       border-radius: 18px;
-      background: rgba(255,255,255,.55);
-      border: 1px dashed rgba(0,0,0,.12);
+      border: 1px dashed rgba(0,0,0,.15);
       overflow: hidden;
     }
 
-    .hint {
-      position: absolute;
-      inset: auto 14px 12px 14px;
-      font-size: 13px;
-      opacity: 0.65;
-    }
-
-    .buttons {
-      position: absolute;
-      inset: 0;
-      display: grid;
-      place-items: center;
-    }
-
     button {
-      appearance: none;
       border: none;
       cursor: pointer;
       padding: 14px 22px;
       border-radius: var(--btn-radius);
       font-size: 18px;
-      font-weight: 750;
+      font-weight: 700;
       box-shadow: 0 10px 22px rgba(0,0,0,.12);
-      transform: translateZ(0);
-      transition: transform .12s ease, filter .12s ease;
-      user-select: none;
-      -webkit-tap-highlight-color: transparent;
+      transition: transform .2s ease;
     }
-
-    button:active { transform: scale(0.98); }
-    button:hover  { filter: brightness(1.02); }
 
     #yesBtn {
       position: absolute;
-      left: 58%;
-      top: 46%;
+      left: 60%;
+      top: 45%;
       background: linear-gradient(135deg, #ff4d8d, #ff2d55);
       color: #fff;
     }
 
     #noBtn {
       position: absolute;
-      left: 32%;
-      top: 54%;
+      left: 30%;
+      top: 55%;
       background: #111;
       color: #fff;
-      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      transition: transform .25s ease;
     }
 
-    #noBtn:hover {
-      box-shadow: 0 0 0 6px rgba(0,0,0,0.08);
-    }
-
-    /* "Forgot password" style third option */
     #forgotBtn {
       position: absolute;
+      bottom: 14px;
       left: 50%;
-      top: 82%;
       transform: translateX(-50%);
       background: transparent;
-      color: rgba(0,0,0,0.55);
       box-shadow: none;
-      padding: 6px 10px;
       font-size: 12px;
-      font-weight: 650;
+      color: rgba(0,0,0,.55);
       text-decoration: underline;
-      text-underline-offset: 3px;
-      border-radius: 10px;
     }
-    #forgotBtn:hover { color: rgba(0,0,0,0.75); filter: none; }
-    #forgotBtn:active { transform: translateX(-50%) scale(0.98); }
 
-    /* Modal */
     .modal {
       position: fixed;
       inset: 0;
       display: none;
       place-items: center;
       background: rgba(0,0,0,.55);
-      padding: 18px;
-      z-index: 50;
+      z-index: 10;
     }
+
     .modal.show { display: grid; }
 
     .modalCard {
-      width: min(680px, 92vw);
-      background: rgba(255,255,255,.92);
-      border-radius: 22px;
-      box-shadow: 0 20px 60px rgba(0,0,0,.25);
-      padding: 22px;
-      text-align: center;
-      position: relative;
-    }
-
-    .modalCard h2 {
-      margin: 6px 0 10px;
-      font-size: clamp(22px, 4vw, 34px);
-    }
-
-    .catBox {
-      display: grid;
-      place-items: center;
-      margin: 14px auto 10px;
-      width: min(520px, 100%);
-      border-radius: 18px;
       background: #fff;
-      border: 1px solid rgba(0,0,0,.08);
-      padding: 16px;
+      border-radius: 22px;
+      padding: 22px;
+      max-width: 520px;
+      width: 92vw;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0,0,0,.25);
     }
 
-    .cat {
-      font-size: 74px;
-      line-height: 1;
-      margin: 6px 0;
+    .catMeme {
+      width: 360px;
+      max-width: 100%;
+      border-radius: 14px;
+      margin: 12px auto;
+      display: block;
+      box-shadow: 0 12px 30px rgba(0,0,0,.25);
     }
 
-    .caption {
-      font-size: 16px;
-      margin: 0;
-      opacity: 0.9;
-    }
-
-    .tiny {
-      font-size: 13px;
-      opacity: 0.75;
-      margin-top: 10px;
-    }
-
-    .closeRow {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 14px;
-    }
-
-    .softBtn {
-      background: #f2f2f2;
-      color: #111;
-      border: 1px solid rgba(0,0,0,.08);
-      box-shadow: none;
-    }
-
-    .primaryBtn {
-      background: linear-gradient(135deg, #ff4d8d, #ff2d55);
-      color: #fff;
+    .modal button {
+      margin: 8px;
+      font-size: 15px;
     }
   </style>
 </head>
+
 <body>
-  <div class="hearts" id="hearts"></div>
+<div class="wrap">
+  <div class="card">
+    <h1>Will you be my Valentine? 💘</h1>
+    <p class="sub">This is a very serious decision. Please choose wisely.</p>
+    <div class="badge" id="status">Status: awaiting answer…</div>
 
-  <div class="wrap">
-    <div class="card">
-      <div class="emoji">💘</div>
-      <h1>Will you be my Valentine?</h1>
-      <p class="sub">
-        This is a very serious, very scientific compatibility test.
-        Please select one option below. (No pressure. Only your entire happiness depends on it.)
-      </p>
-
-      <div class="badge" id="statusBadge">Status: awaiting your decision…</div>
-
-      <div class="playground" id="arena">
-        <div class="buttons">
-          <button id="yesBtn" aria-label="Yes">YES 💖</button>
-          <button id="noBtn" aria-label="No">NO 🙃</button>
-
-          <!-- The “forgot password” style third option -->
-          <button id="forgotBtn" aria-label="Alternative option">
-            Forgot password? (I don’t deserve you)
-          </button>
-        </div>
-        <div class="hint">Tip: the “YES” button is shy. Like… *criminally* shy.</div>
-      </div>
+    <div class="playground" id="arena">
+      <button id="yesBtn">YES 💖</button>
+      <button id="noBtn">NO 🙃</button>
+      <button id="forgotBtn">Forgot password? (I don’t deserve you)</button>
     </div>
   </div>
+</div>
 
-  <!-- NO modal -->
-  <div class="modal" id="modalNo">
-    <div class="modalCard">
-      <div style="font-size:40px">🚨</div>
-      <h2>HOW DARE YOU</h2>
-      <div class="catBox">
-        <div class="cat">😱🐱</div>
-        <p class="caption"><b>Shocked Cat:</b> “Excuse me?? In this economy?? On this day??”</p>
-        <p class="caption">Your “NO” has been forwarded to the Department of Romance.</p>
-        <p class="tiny">(Expected processing time: 3–5 business never.)</p>
-      </div>
-
-      <div class="closeRow">
-        <button class="softBtn" id="closeNo">Ok ok, close 🙈</button>
-        <button class="primaryBtn" id="reconsiderNo">I reconsider. Try again 💘</button>
-      </div>
-    </div>
+<!-- NO modal -->
+<div class="modal" id="noModal">
+  <div class="modalCard">
+    <h2>HOW DARE YOU</h2>
+    <img
+      class="catMeme"
+      src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExMG11ZzI1dDA3dXNoYjV2YTBwMHZsa20zOWk4bHpxM3NpaHJnd3p3byZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/BBNYBoYa5VwtO/giphy.gif"
+      alt="Shocked cat gif"
+    />
+    <p>Excuse me?? In this economy?? On this day??</p>
+    <button onclick="closeModals()">Ok ok 🙈</button>
   </div>
+</div>
 
-  <!-- "I don't deserve you" modal -->
-  <div class="modal" id="modalForgot">
-    <div class="modalCard">
-      <div style="font-size:40px">🥺</div>
-      <h2>Wow. That’s… accurate.</h2>
-      <div class="catBox">
-        <div class="cat">🫶😳</div>
-        <p class="caption">You just selected: <b>“I don’t deserve you.”</b></p>
-        <p class="caption">Correct. But I’m trying my best. Please accept this coupon:</p>
-        <p class="tiny"><b>Coupon:</b> 1 free hug + 2 compliments + unlimited snacks 🍫</p>
-      </div>
-
-      <div class="closeRow">
-        <button class="softBtn" id="closeForgot">Close (I’m blushing) 🙈</button>
-        <button class="primaryBtn" id="reconsiderForgot">Ok fine. Try again 💘</button>
-      </div>
-    </div>
+<!-- Self-roast modal -->
+<div class="modal" id="forgotModal">
+  <div class="modalCard">
+    <h2>Wow. That’s accurate.</h2>
+    <img
+      class="catMeme"
+      src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExMG11ZzI1dDA3dXNoYjV2YTBwMHZsa20zOWk4bHpxM3NpaHJnd3p3byZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/BBNYBoYa5VwtO/giphy.gif"
+      alt="Self roast gif"
+    />
+    <p>You selected: “I don’t deserve you.” Correct. But I’m trying.</p>
+    <button onclick="closeModals()">I reconsider 💘</button>
   </div>
+</div>
 
-  <script>
-    // --- Cute floating hearts background ---
-    const heartsEl = document.getElementById('hearts');
-    const heartChars = ["💖","💘","💕","💗","💓","💝","❤️","💞"];
-    const makeHeart = () => {
-      const s = document.createElement('div');
-      s.className = 'heart';
-      s.textContent = heartChars[Math.floor(Math.random() * heartChars.length)];
-      const left = Math.random() * 100;
-      const dur = 6 + Math.random() * 6;
-      const drift = (Math.random() * 120 - 60).toFixed(0) + 'px';
-      const rot = (Math.random() * 180 - 90).toFixed(0) + 'deg';
-      const size = 18 + Math.random() * 18;
-      s.style.left = left + 'vw';
-      s.style.animationDuration = dur + 's';
-      s.style.setProperty('--drift', drift);
-      s.style.setProperty('--rot', rot);
-      s.style.fontSize = size + 'px';
-      heartsEl.appendChild(s);
-      setTimeout(() => s.remove(), dur * 1000);
-    };
-    for (let i = 0; i < 18; i++) setTimeout(makeHeart, i * 250);
-    setInterval(makeHeart, 450);
+<script>
+  const arena = document.getElementById("arena");
+  const yesBtn = document.getElementById("yesBtn");
+  const noBtn = document.getElementById("noBtn");
+  const forgotBtn = document.getElementById("forgotBtn");
+  const status = document.getElementById("status");
 
-    // --- Elements ---
-    const arena = document.getElementById('arena');
-    const yesBtn = document.getElementById('yesBtn');
-    const noBtn = document.getElementById('noBtn');
-    const forgotBtn = document.getElementById('forgotBtn');
-    const badge = document.getElementById('statusBadge');
+  let noScale = 1;
 
-    const modalNo = document.getElementById('modalNo');
-    const closeNo = document.getElementById('closeNo');
-    const reconsiderNo = document.getElementById('reconsiderNo');
+  function moveYes() {
+    const a = arena.getBoundingClientRect();
+    const b = yesBtn.getBoundingClientRect();
+    yesBtn.style.left = Math.random() * (a.width - b.width) + "px";
+    yesBtn.style.top  = Math.random() * (a.height - b.height) + "px";
 
-    const modalForgot = document.getElementById('modalForgot');
-    const closeForgot = document.getElementById('closeForgot');
-    const reconsiderForgot = document.getElementById('reconsiderForgot');
+    noScale = Math.min(noScale + 0.08, 1.9);
+    noBtn.style.transform = `scale(${noScale})`;
+    status.textContent = "YES escaped. NO is gaining confidence…";
+  }
 
-    // --- NO button growth mechanics 😈 ---
-    let yesEscapeCount = 0;
-    let noScale = 1;
-    const NO_SCALE_STEP = 0.08; // growth per YES escape
-    const NO_SCALE_MAX = 1.9;   // cap so layout doesn't implode
+  arena.addEventListener("mousemove", e => {
+    const b = yesBtn.getBoundingClientRect();
+    if (Math.hypot(e.clientX - b.x, e.clientY - b.y) < 120) moveYes();
+  });
 
-    function encourageNo() {
-      yesEscapeCount++;
+  yesBtn.onclick = () => alert("You caught YES. This is destiny 💍");
+  noBtn.onclick = () => document.getElementById("noModal").classList.add("show");
+  forgotBtn.onclick = () => document.getElementById("forgotModal").classList.add("show");
 
-      if (noScale < NO_SCALE_MAX) {
-        noScale += NO_SCALE_STEP;
-        noScale = Math.min(noScale, NO_SCALE_MAX);
-        noBtn.style.transform = `scale(${noScale})`;
-      }
+  function closeModals() {
+    document.querySelectorAll(".modal").forEach(m => m.classList.remove("show"));
+  }
 
-      // Escalating button text for extra comedy
-      if (yesEscapeCount === 3) noBtn.textContent = "NO 🙂";
-      else if (yesEscapeCount === 6) noBtn.textContent = "NO 😏";
-      else if (yesEscapeCount === 10) noBtn.textContent = "NO (just saying)";
-      else if (yesEscapeCount === 14) noBtn.textContent = "NO (it's huge now)";
-    }
-
-    // Place the YES button somewhere random inside the arena, but not outside.
-    function moveYesButton(escapeBoost = 1) {
-      const a = arena.getBoundingClientRect();
-      const b = yesBtn.getBoundingClientRect();
-
-      const margin = 12;
-      const maxX = a.width - b.width - margin;
-      const maxY = a.height - b.height - margin;
-
-      const rand = (max) => Math.max(margin, Math.min(max, Math.random() * max));
-      const x = rand(maxX);
-      const y = rand(maxY);
-
-      yesBtn.style.left = `${x}px`;
-      yesBtn.style.top  = `${y}px`;
-
-      const wobble = 3 * escapeBoost;
-      yesBtn.style.transform =
-        `translate(${(Math.random()*wobble - wobble/2).toFixed(1)}px,
-                   ${(Math.random()*wobble - wobble/2).toFixed(1)}px)
-         rotate(${(Math.random()*6-3).toFixed(1)}deg)`;
-
-      // Every escape encourages NO 😈
-      encourageNo();
-    }
-
-    // Detect proximity of pointer to the YES button and scoot it away.
-    function fleeFromPointer(clientX, clientY) {
-      const a = arena.getBoundingClientRect();
-      const b = yesBtn.getBoundingClientRect();
-
-      const px = clientX - a.left;
-      const py = clientY - a.top;
-
-      const bx = (b.left - a.left) + b.width / 2;
-      const by = (b.top  - a.top)  + b.height / 2;
-
-      const dx = px - bx;
-      const dy = py - by;
-      const dist = Math.hypot(dx, dy);
-
-      const panicRadius = 120;
-      if (dist < panicRadius) {
-        const escapeBoost = Math.max(1, (panicRadius - dist) / 25);
-        moveYesButton(escapeBoost);
-        badge.textContent = "Status: YES button is currently in flight 🏃‍♀️💨 (NO is gaining confidence…)";
-      }
-    }
-
-    // Initial placement
-    moveYesButton(1);
-
-    // Mouse + touch: make YES flee.
-    arena.addEventListener('mousemove', (e) => fleeFromPointer(e.clientX, e.clientY), { passive: true });
-    arena.addEventListener('touchstart', (e) => {
-      const t = e.touches[0];
-      if (t) fleeFromPointer(t.clientX, t.clientY);
-    }, { passive: true });
-    arena.addEventListener('touchmove', (e) => {
-      const t = e.touches[0];
-      if (t) fleeFromPointer(t.clientX, t.clientY);
-    }, { passive: true });
-
-    // Extra: if she somehow hovers directly, teleport anyway.
-    yesBtn.addEventListener('mouseenter', () => moveYesButton(2));
-
-    // Clicking YES: technically possible if someone is a ninja,
-    // but we’ll still treat it as a win.
-    yesBtn.addEventListener('click', () => {
-      badge.textContent = "Status: YES was clicked. This is either true love… or witchcraft. 💍✨";
-      alert("YOU DID IT! 💖\n\nEither you're ridiculously fast or the universe shipped us.");
-    });
-
-    // Clicking NO: show shocked cat meme modal
-    noBtn.addEventListener('click', () => {
-      badge.textContent = "Status: NO was pressed (this will be investigated) 🕵️‍♂️";
-      modalNo.classList.add('show');
-    });
-
-    // Clicking "Forgot password? (I don’t deserve you)" — show self-roast modal 😭
-    forgotBtn.addEventListener('click', () => {
-      badge.textContent = "Status: self-roast accepted. Confidence set to: low 🥲";
-      modalForgot.classList.add('show');
-    });
-
-    // Modal controls
-    closeNo.addEventListener('click', () => modalNo.classList.remove('show'));
-    reconsiderNo.addEventListener('click', () => {
-      modalNo.classList.remove('show');
-      badge.textContent = "Status: wise choice. Try again 😌💘";
-      moveYesButton(1);
-    });
-
-    closeForgot.addEventListener('click', () => modalForgot.classList.remove('show'));
-    reconsiderForgot.addEventListener('click', () => {
-      modalForgot.classList.remove('show');
-      badge.textContent = "Status: ok ok. Try again 😌💘";
-      moveYesButton(1);
-    });
-
-    // Optional fun: press "Y" to force a YES (if she gets annoyed)
-    window.addEventListener('keydown', (e) => {
-      if (e.key.toLowerCase() === 'y') {
-        badge.textContent = "Status: Secret override activated. The universe says YES. 💖";
-        alert("Secret override: YES accepted 💖");
-      }
-    });
-  </script>
+  moveYes();
+</script>
 </body>
 </html>
-
-
