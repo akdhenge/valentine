@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Important Valentine Question</title>
+  <style>
+    :root {
+      --bg1: #ffebf3;
+      --bg2: #ffe6cc;
+      --card: rgba(255, 255, 255, 0.75);
+      --text: #1f1f1f;
+      --shadow: 0 18px 50px rgba(0,0,0,.12);
+      --radius: 24px;
+      --btn-radius: 999px;
+      --pink: #ff3b7a;
+      --red: #ff2d55;
+      --dark: #111;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      color: var(--text);
+      overflow: hidden;
+      background:
+        radial-gradient(1200px 800px at 20% 20%, #fff 0%, transparent 60%),
+        radial-gradient(900px 700px at 80% 30%, #fff 0%, transparent 55%),
+        linear-gradient(135deg, var(--bg1), var(--bg2));
+    }
+
+    .hearts {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.45;
+      filter: blur(0.2px);
+    }
+
+    .heart {
+      position: absolute;
+      font-size: 26px;
+      animation: floaty 8s linear infinite;
+      transform: translateY(110vh);
+    }
+
+    @keyframes floaty {
+      0%   { transform: translateY(110vh) translateX(0) rotate(0deg); opacity: 0; }
+      10%  { opacity: 1; }
+      100% { transform: translateY(-20vh) translateX(var(--drift)) rotate(var(--rot)); opacity: 0; }
+    }
+
+    .wrap {
+      position: relative;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 18px;
+    }
+
+    .card {
+      width: min(720px, 92vw);
+      background: var(--card);
+      border: 1px solid rgba(255,255,255,.55);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 28px 22px;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      text-align: center;
+      position: relative;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(28px, 5vw, 44px);
+      letter-spacing: -0.02em;
+    }
+
+    .sub {
+      margin: 0 auto 18px;
+      max-width: 52ch;
+      font-size: clamp(14px, 2.5vw, 18px);
+      opacity: 0.9;
+      line-height: 1.4;
+    }
+
+    .emoji {
+      font-size: 42px;
+      margin-bottom: 10px;
+      user-select: none;
+    }
+
+    .playground {
+      position: relative;
+      height: 260px;
+      margin-top: 18px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.55);
+      border: 1px dashed rgba(0,0,0,.12);
+      overflow: hidden;
+    }
+
+    .hint {
+      position: absolute;
+      inset: auto 14px 12px 14px;
+      font-size: 13px;
+      opacity: 0.65;
+    }
+
+    .buttons {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+    }
+
+    button {
+      appearance: none;
+      border: none;
+      cursor: pointer;
+      padding: 14px 22px;
+      border-radius: var(--btn-radius);
+      font-size: 18px;
+      font-weight: 750;
+      box-shadow: 0 10px 22px rgba(0,0,0,.12);
+      transform: translateZ(0);
+      transition: transform .12s ease, filter .12s ease;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    button:active { transform: scale(0.98); }
+    button:hover  { filter: brightness(1.02); }
+
+    #yesBtn {
+      position: absolute;
+      left: 58%;
+      top: 46%;
+      background: linear-gradient(135deg, #ff4d8d, #ff2d55);
+      color: #fff;
+    }
+
+    #noBtn {
+      position: absolute;
+      left: 32%;
+      top: 54%;
+      background: #111;
+      color: #fff;
+    }
+
+    .badge {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,59,122,.10);
+      border: 1px solid rgba(255,59,122,.22);
+      font-weight: 650;
+      font-size: 13px;
+    }
+
+    /* Modal */
+    .modal {
+      position: fixed;
+      inset: 0;
+      display: none;
+      place-items: center;
+      background: rgba(0,0,0,.55);
+      padding: 18px;
+      z-index: 50;
+    }
+    .modal.show { display: grid; }
+
+    .modalCard {
+      width: min(680px, 92vw);
+      background: rgba(255,255,255,.92);
+      border-radius: 22px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.25);
+      padding: 22px;
+      text-align: center;
+      position: relative;
+    }
+
+    .modalCard h2 {
+      margin: 6px 0 10px;
+      font-size: clamp(22px, 4vw, 34px);
+    }
+
+    .catBox {
+      display: grid;
+      place-items: center;
+      margin: 14px auto 10px;
+      width: min(520px, 100%);
+      border-radius: 18px;
+      background: #fff;
+      border: 1px solid rgba(0,0,0,.08);
+      padding: 16px;
+    }
+
+    .cat {
+      font-size: 74px;
+      line-height: 1;
+      margin: 6px 0;
+    }
+
+    .caption {
+      font-size: 16px;
+      margin: 0;
+      opacity: 0.9;
+    }
+
+    .tiny {
+      font-size: 13px;
+      opacity: 0.75;
+      margin-top: 10px;
+    }
+
+    .closeRow {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+
+    .softBtn {
+      background: #f2f2f2;
+      color: #111;
+      border: 1px solid rgba(0,0,0,.08);
+      box-shadow: none;
+    }
+
+    .primaryBtn {
+      background: linear-gradient(135deg, #ff4d8d, #ff2d55);
+      color: #fff;
+    }
+
+    /* Small screens */
+    @media (max-width: 420px) {
+      .playground { height: 290px; }
+      #yesBtn, #noBtn { font-size: 17px; padding: 13px 20px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="hearts" id="hearts"></div>
+
+  <div class="wrap">
+    <div class="card">
+      <div class="emoji">💘</div>
+      <h1>Will you be my Valentine?</h1>
+      <p class="sub">
+        This is a very serious, very scientific compatibility test.
+        Please select one option below. (No pressure. Only your entire happiness depends on it.)
+      </p>
+
+      <div class="badge" id="statusBadge">Status: awaiting your decision…</div>
+
+      <div class="playground" id="arena">
+        <div class="buttons">
+          <button id="yesBtn" aria-label="Yes">YES 💖</button>
+          <button id="noBtn" aria-label="No">NO 🙃</button>
+        </div>
+        <div class="hint">Tip: the “YES” button is shy. Like… *criminally* shy.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="modal">
+    <div class="modalCard">
+      <div style="font-size:40px">🚨</div>
+      <h2>HOW DARE YOU</h2>
+      <div class="catBox">
+        <div class="cat">😱🐱</div>
+        <p class="caption"><b>Shocked Cat:</b> “Excuse me?? In this economy?? On this day??”</p>
+        <p class="caption">Your “NO” has been forwarded to the Department of Romance.</p>
+        <p class="tiny">(Expected processing time: 3–5 business never.)</p>
+      </div>
+
+      <div class="closeRow">
+        <button class="softBtn" id="closeBtn">Ok ok, close 🙈</button>
+        <button class="primaryBtn" id="reconsiderBtn">I reconsider. Try again 💘</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- Cute floating hearts background ---
+    const heartsEl = document.getElementById('hearts');
+    const heartChars = ["💖","💘","💕","💗","💓","💝","❤️","💞"];
+    const makeHeart = () => {
+      const s = document.createElement('div');
+      s.className = 'heart';
+      s.textContent = heartChars[Math.floor(Math.random() * heartChars.length)];
+      const left = Math.random() * 100;
+      const dur = 6 + Math.random() * 6;
+      const drift = (Math.random() * 120 - 60).toFixed(0) + 'px';
+      const rot = (Math.random() * 180 - 90).toFixed(0) + 'deg';
+      const size = 18 + Math.random() * 18;
+      s.style.left = left + 'vw';
+      s.style.animationDuration = dur + 's';
+      s.style.setProperty('--drift', drift);
+      s.style.setProperty('--rot', rot);
+      s.style.fontSize = size + 'px';
+      heartsEl.appendChild(s);
+      setTimeout(() => s.remove(), dur * 1000);
+    };
+    for (let i = 0; i < 18; i++) setTimeout(makeHeart, i * 250);
+    setInterval(makeHeart, 450);
+
+    // --- The actual prank ---
+    const arena = document.getElementById('arena');
+    const yesBtn = document.getElementById('yesBtn');
+    const noBtn = document.getElementById('noBtn');
+    const badge = document.getElementById('statusBadge');
+
+    const modal = document.getElementById('modal');
+    const closeBtn = document.getElementById('closeBtn');
+    const reconsiderBtn = document.getElementById('reconsiderBtn');
+
+    // Place the YES button somewhere random inside the arena, but not outside.
+    function moveYesButton(escapeBoost = 1) {
+      const a = arena.getBoundingClientRect();
+      const b = yesBtn.getBoundingClientRect();
+
+      // Keep a margin so it doesn't get stuck on edges
+      const margin = 12;
+      const maxX = a.width - b.width - margin;
+      const maxY = a.height - b.height - margin;
+
+      // Random position, slightly biased away from center for extra chaos
+      const rand = (max) => Math.max(margin, Math.min(max, Math.random() * max));
+      const x = rand(maxX);
+      const y = rand(maxY);
+
+      yesBtn.style.left = `${x}px`;
+      yesBtn.style.top  = `${y}px`;
+
+      // A little wobble so it feels alive
+      const wobble = 3 * escapeBoost;
+      yesBtn.style.transform = `translate(${(Math.random()*wobble - wobble/2).toFixed(1)}px, ${(Math.random()*wobble - wobble/2).toFixed(1)}px) rotate(${(Math.random()*6-3).toFixed(1)}deg)`;
+    }
+
+    // Detect proximity of pointer to the YES button and scoot it away.
+    function fleeFromPointer(clientX, clientY) {
+      const a = arena.getBoundingClientRect();
+      const b = yesBtn.getBoundingClientRect();
+
+      const px = clientX - a.left;
+      const py = clientY - a.top;
+
+      const bx = (b.left - a.left) + b.width / 2;
+      const by = (b.top  - a.top)  + b.height / 2;
+
+      const dx = px - bx;
+      const dy = py - by;
+      const dist = Math.hypot(dx, dy);
+
+      // The closer you get, the more it panics.
+      const panicRadius = 120;
+      if (dist < panicRadius) {
+        const escapeBoost = Math.max(1, (panicRadius - dist) / 25);
+        moveYesButton(escapeBoost);
+        badge.textContent = "Status: YES button is currently in flight 🏃‍♀️💨";
+      }
+    }
+
+    // Initial placement (so it doesn't start dead-center every time)
+    moveYesButton(1);
+
+    // Mouse + touch: make YES flee.
+    arena.addEventListener('mousemove', (e) => fleeFromPointer(e.clientX, e.clientY), { passive: true });
+    arena.addEventListener('touchstart', (e) => {
+      const t = e.touches[0];
+      if (t) fleeFromPointer(t.clientX, t.clientY);
+    }, { passive: true });
+    arena.addEventListener('touchmove', (e) => {
+      const t = e.touches[0];
+      if (t) fleeFromPointer(t.clientX, t.clientY);
+    }, { passive: true });
+
+    // Extra: if she somehow hovers directly, teleport anyway.
+    yesBtn.addEventListener('mouseenter', () => moveYesButton(2));
+
+    // Clicking YES: technically possible if someone is a ninja,
+    // but we’ll still treat it as a win.
+    yesBtn.addEventListener('click', () => {
+      badge.textContent = "Status: YES was clicked. This is either true love… or witchcraft. 💍✨";
+      alert("YOU DID IT! 💖\n\nEither you're ridiculously fast or the universe shipped us.");
+    });
+
+    // Clicking NO: show shocked cat meme modal
+    noBtn.addEventListener('click', () => {
+      badge.textContent = "Status: NO was pressed (this will be investigated) 🕵️‍♂️";
+      modal.classList.add('show');
+    });
+
+    closeBtn.addEventListener('click', () => modal.classList.remove('show'));
+    reconsiderBtn.addEventListener('click', () => {
+      modal.classList.remove('show');
+      badge.textContent = "Status: wise choice. Try again 😌💘";
+      moveYesButton(1);
+    });
+
+    // Optional fun: press "Y" to force a YES (if she gets annoyed)
+    window.addEventListener('keydown', (e) => {
+      if (e.key.toLowerCase() === 'y') {
+        badge.textContent = "Status: Secret override activated. The universe says YES. 💖";
+        alert("Secret override: YES accepted 💖");
+      }
+    });
+  </script>
+</body>
+</html>
