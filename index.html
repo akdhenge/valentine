@@ -559,6 +559,8 @@
   let noScale = 1;
   const NO_SCALE_STEP = 0.08;
   const NO_SCALE_MAX  = 1.9;
+  let lastNoGrowth = 0;
+  const NO_GROW_COOLDOWN = 600;
 
   function placeYesRandomly(){
     const a = arena.getBoundingClientRect();
@@ -580,6 +582,9 @@
 
   function encourageNo(){
     if (poweredUp) return;
+    const now = Date.now();
+    if (now - lastNoGrowth < NO_GROW_COOLDOWN) return;
+    lastNoGrowth = now;
     if (noScale < NO_SCALE_MAX){
       noScale = Math.min(noScale + NO_SCALE_STEP, NO_SCALE_MAX);
       noBtn.style.transform = `scale(${noScale})`;
